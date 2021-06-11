@@ -50,7 +50,7 @@ void shTaskManager::tick()
 {
   for (uint16_t i = 0; i < TASKCOUNT; i++)
   {
-    if (taskList[i].status && taskList[i].callback)
+    if (taskList[i].status && taskList[i].callback != NULL)
     {
       if (millis() - taskList[i].timer >= taskList[i].interval)
       {
@@ -92,7 +92,7 @@ void shTaskManager::taskExes(shHandle _handle)
   {
     if (taskList[_handle].callback != NULL)
     {
-      taskList[_handle].timer += taskList[_handle].interval;
+      taskList[_handle].timer = millis();
       taskList[_handle].callback();
     }
   }
@@ -112,6 +112,11 @@ uint32_t shTaskManager::getNextPoint()
   return (result);
 }
 
+bool shTaskManager::getTaskState(shHandle _handle)
+{
+  return (isValidHandle(_handle) && taskList[_handle].status && taskList[_handle].callback != NULL);
+}
+
 void shTaskManager::setTaskInterval(uint32_t _interval, shHandle _handle, bool _restart = true)
 {
   if (isValidHandle(_handle))
@@ -122,6 +127,11 @@ void shTaskManager::setTaskInterval(uint32_t _interval, shHandle _handle, bool _
       startTask(_handle);
     }
   }
+}
+
+void shTaskManager::setTaskState(shHandle _handle, bool _state)
+{
+  (_state) ? startTask(_handle) : stopTask(_handle);
 }
 
 uint16_t shTaskManager::getTaskCount(bool onlyActive = false)

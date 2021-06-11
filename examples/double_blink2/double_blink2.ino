@@ -42,6 +42,7 @@ void blink2()
     tasks.startTask(tBlink1);
   }
 }
+
 void setup()
 {
   pinMode(BLINK_1, OUTPUT);

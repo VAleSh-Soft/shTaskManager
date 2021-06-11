@@ -17,8 +17,10 @@ delTask	KEYWORD2
 startTask	KEYWORD2
 restartTask	KEYWORD2
 stopTask	KEYWORD2
-setTaskInterval	KEYWORD2
 taskExes	KEYWORD2
+setTaskInterval	KEYWORD2
+setTaskState	KEYWORD2
+getTaskState	KEYWORD2
 getNextPoint	KEYWORD2
 getTaskCount	KEYWORD2
 tick	KEYWORD2

@@ -59,11 +59,20 @@ public:
   void taskExes(shHandle _handle);
   // Получение времени в милисекундах до срабатывания следующей задачи
   uint32_t getNextPoint();
+  /* Получение статуса задачи
+  - _handle - идентификатор останавливаемой задачи;
+  */
+  bool getTaskState(shHandle _handle);
+  /* Установка статуса задачи
+  - _handle - идентификатор останавливаемой задачи;
+  - _state - новый статус задачи;
+  */
+  void setTaskState(shHandle _handle, bool _state);
   /* Установка нового интервала срабатывания задачи
   - _interval - новое значение интервала срабатывания задачи;
   - _handle - идентификатор задачи;
   - _restart - перезапускать или нет задачу с новым интервалом;
-*/
+  */
   void setTaskInterval(uint32_t _interval, shHandle _handle, bool _restart = true);
   /* Получение количества задач в списке
   - onlyActive - если true, то подсчитываются только активные задачи;
