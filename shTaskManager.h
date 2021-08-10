@@ -73,7 +73,7 @@ public:
   - _handle - идентификатор задачи;
   - _restart - перезапускать или нет задачу с новым интервалом;
   */
-  void setTaskInterval(uint32_t _interval, shHandle _handle, bool _restart = true);
+  void setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart = true);
   /* Получение количества задач в списке
   - onlyActive - если true, то подсчитываются только активные задачи;
   */

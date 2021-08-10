@@ -117,7 +117,7 @@ bool shTaskManager::getTaskState(shHandle _handle)
   return (isValidHandle(_handle) && taskList[_handle].status && taskList[_handle].callback != NULL);
 }
 
-void shTaskManager::setTaskInterval(uint32_t _interval, shHandle _handle, bool _restart = true)
+void shTaskManager::setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart = true)
 {
   if (isValidHandle(_handle))
   {
