@@ -1,9 +1,9 @@
 #pragma once
 #include <Arduino.h>
 
-static const int8_t INVALID_HANDLE = -1;
 using shCallback = void (*)(void); // тип - указатель для Callback-функции
-using shHandle = int8_t;           // тип - идентификатор задачи
+using shHandle = int16_t;          // тип - идентификатор задачи
+static const shHandle INVALID_HANDLE = -1;
 
 struct shTask // структура, описывающая задачу
 {
