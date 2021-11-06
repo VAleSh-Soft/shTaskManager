@@ -112,6 +112,19 @@ uint32_t shTaskManager::getNextPoint()
   return (result);
 }
 
+uint32_t shTaskManager::getNextTaskPoint(shHandle _handle)
+{
+  uint32_t result = UINT32_MAX;
+  if (isValidHandle(_handle))
+  {
+    if (taskList[_handle].status && taskList[_handle].callback != NULL)
+    {
+      result = taskList[_handle].timer + taskList[_handle].interval - millis();
+    }
+  }
+  return (result);
+}
+
 bool shTaskManager::getTaskState(shHandle _handle)
 {
   return (isValidHandle(_handle) && taskList[_handle].status && taskList[_handle].callback != NULL);
