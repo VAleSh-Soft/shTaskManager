@@ -135,9 +135,10 @@ void shTaskManager::setTaskInterval(shHandle _handle, uint32_t _interval, bool _
   if (isValidHandle(_handle))
   {
     taskList[_handle].interval = _interval;
-    if (_restart)
+    if (_restart && (taskList[_handle].callback != NULL))
     {
-      startTask(_handle);
+      taskList[_handle].status = true;
+      taskList[_handle].timer = millis();
     }
   }
 }
