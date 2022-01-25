@@ -27,10 +27,7 @@ shHandle shTaskManager::addTask(uint32_t _interval, shCallback _callback, bool i
       taskList[i].status = isActive;
       taskList[i].interval = _interval;
       taskList[i].callback = _callback;
-      if (isActive)
-      {
-        taskList[i].timer = millis();
-      }
+      taskList[i].timer = millis();
       result = i;
       break;
     }
@@ -135,9 +132,10 @@ void shTaskManager::setTaskInterval(shHandle _handle, uint32_t _interval, bool _
   if (isValidHandle(_handle))
   {
     taskList[_handle].interval = _interval;
-    if (_restart)
+    if (_restart && (taskList[_handle].callback != NULL))
     {
-      startTask(_handle);
+      taskList[_handle].status = true;
+      taskList[_handle].timer = millis();
     }
   }
 }
