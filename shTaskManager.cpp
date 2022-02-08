@@ -17,7 +17,7 @@ shTaskManager::~shTaskManager()
   delete[] taskList;
 }
 
-shHandle shTaskManager::addTask(uint32_t _interval, shCallback _callback, bool isActive = true)
+shHandle shTaskManager::addTask(uint32_t _interval, shCallback _callback, bool isActive)
 {
   int16_t result = INVALID_HANDLE;
   for (uint16_t i = 0; i < TASKCOUNT; i++)
@@ -127,7 +127,7 @@ bool shTaskManager::getTaskState(shHandle _handle)
   return (isValidHandle(_handle) && taskList[_handle].status && taskList[_handle].callback != NULL);
 }
 
-void shTaskManager::setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart = true)
+void shTaskManager::setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart)
 {
   if (isValidHandle(_handle))
   {
@@ -145,7 +145,7 @@ void shTaskManager::setTaskState(shHandle _handle, bool _state)
   (_state) ? startTask(_handle) : stopTask(_handle);
 }
 
-uint16_t shTaskManager::getTaskCount(bool onlyActive = false)
+uint16_t shTaskManager::getTaskCount(bool onlyActive)
 {
   uint16_t result = 0;
   for (uint16_t i = 0; i < TASKCOUNT; i++)

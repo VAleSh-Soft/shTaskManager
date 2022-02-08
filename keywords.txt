@@ -7,6 +7,9 @@
 #######################################
 
 shTaskManager	KEYWORD1
+shHandle	KEYWORD1
+shCallback	KEYWORD1
+shTask	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2) 
