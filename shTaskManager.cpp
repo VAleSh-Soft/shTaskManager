@@ -12,10 +12,10 @@ shTaskManager::shTaskManager(int16_t _taskCount)
   }
 }
 
-shTaskManager::~shTaskManager()
-{
-  delete[] taskList;
-}
+// shTaskManager::~shTaskManager() // если кому-то важно наличие деструктора, раскомментируйте
+// {
+//   delete[] taskList;
+// }
 
 shHandle shTaskManager::addTask(uint32_t _interval, shCallback _callback, bool isActive)
 {
