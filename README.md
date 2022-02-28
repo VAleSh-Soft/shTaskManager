@@ -48,7 +48,7 @@ void stopTask(shHandle _handle); - остановка задачи; _handle - и
 
 void taskExes(shHandle _handle); - немедленное выполнение задачи; при этом если задача активна, то она будет перезапущена, ее интервал начнет заново отсчитываться с момента выполнения этого метода; _handle - идентификатор задачи;
 
-void setTaskInterval(uint32_t _interval, shHandle _handle, bool _restart = true); - изменение интервала срабатывания задачи; _interval - новый интервал в милисекундах, _handle - идентификатор задачи, _restart - перезапускать или нет задачу с новым интервалом;
+void setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart = true); - изменение интервала срабатывания задачи; _handle - идентификатор задачи, _interval - новый интервал в милисекундах, _restart - перезапускать или нет задачу с новым интервалом;
 
 void setTaskState(shHandle _handle, bool _state); - установка статуса задачи; _handle - идентификатор задачи, _state - новый статус; в зависимости от значения флага _state будет вызван либо метод startTask() (_state == true), либо метод stopTask() (_state == false);
 

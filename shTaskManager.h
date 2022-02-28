@@ -73,8 +73,8 @@ public:
   */
   void setTaskState(shHandle _handle, bool _state);
   /* Установка нового интервала срабатывания задачи
-  - _interval - новое значение интервала срабатывания задачи;
   - _handle - идентификатор задачи;
+  - _interval - новое значение интервала срабатывания задачи;
   - _restart - перезапускать или нет задачу с новым интервалом;
   */
   void setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart = true);
