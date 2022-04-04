@@ -16,7 +16,7 @@ struct shTask // структура, описывающая задачу
 class shTaskManager
 {
 private:
-  int16_t TASKCOUNT;                    // максимальное число задач
+  uint8_t TASKCOUNT = 0;                // максимальное число задач
   shTask *taskList = NULL;              // массив - список задач
   bool isValidHandle(shHandle _handle); // проверка корректности идентификатора задачи
 
@@ -28,6 +28,7 @@ public:
   // // Деструктор класса // если кому-то важно наличие деструктора, раскомментируйте
   // ~shTaskManager();
   // Опрос списка задач; необходимо выполнять максимально часто
+
   void tick();
   /* Добавление задачи в список
   - _interval - интервал срабатывания задачи в милисекундах;
@@ -37,47 +38,58 @@ public:
   метод возвращает идентификатор задачи в списке в случае успешного добавления или -1 в случае неудачи;
   */
   shHandle addTask(uint32_t _interval, shCallback _callback, bool isActive = true);
+
   /* Удаление задачи из списка
   - _handle - идентификатор удаляемой задачи;
   */
   void delTask(shHandle _handle);
+
   /* Запуск задачи
   - _handle - идентификатор запускаемой задачи;
   */
   void startTask(shHandle _handle);
+
   /* Перезапуск задачи
   - _handle - идентификатор перезапускаемой задачи;
   */
   void restartTask(shHandle _handle);
+
   /* Остановка задачи
   - _handle - идентификатор останавливаемой задачи;
   */
   void stopTask(shHandle _handle);
+
   /* Немедленное выполнение задачи
   - _handle - идентификатор задачи;
   */
   void taskExes(shHandle _handle);
+
   // Получение времени в милисекундах до срабатывания следующей задачи
   uint32_t getNextPoint();
+
   /* Получение времени в милисекундах до следующего срабатывания задачи
   - _handle - идентификатор задачи;
   */
   uint32_t getNextTaskPoint(shHandle _handle);
+
   /* Получение статуса задачи
   - _handle - идентификатор задачи;
   */
   bool getTaskState(shHandle _handle);
+
   /* Установка статуса задачи
   - _handle - идентификатор задачи;
   - _state - новый статус задачи;
   */
   void setTaskState(shHandle _handle, bool _state);
+
   /* Установка нового интервала срабатывания задачи
   - _handle - идентификатор задачи;
   - _interval - новое значение интервала срабатывания задачи;
   - _restart - перезапускать или нет задачу с новым интервалом;
   */
   void setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart = true);
+  
   /* Получение количества задач в списке
   - onlyActive - если true, то подсчитываются только активные задачи;
   */

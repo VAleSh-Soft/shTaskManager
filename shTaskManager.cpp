@@ -5,7 +5,7 @@ shTaskManager::shTaskManager(int16_t _taskCount)
 {
   TASKCOUNT = _taskCount;
   taskList = new shTask[TASKCOUNT];
-  for (uint16_t i = 0; i < TASKCOUNT; i++)
+  for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
     taskList[i].callback = NULL;
     taskList[i].status = false;
@@ -20,7 +20,7 @@ shTaskManager::shTaskManager(int16_t _taskCount)
 shHandle shTaskManager::addTask(uint32_t _interval, shCallback _callback, bool isActive)
 {
   int16_t result = INVALID_HANDLE;
-  for (uint16_t i = 0; i < TASKCOUNT; i++)
+  for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
     if (taskList[i].callback == NULL)
     {
@@ -45,7 +45,7 @@ void shTaskManager::delTask(shHandle _handle)
 
 void shTaskManager::tick()
 {
-  for (uint16_t i = 0; i < TASKCOUNT; i++)
+  for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
     if (taskList[i].status && taskList[i].callback != NULL)
     {
@@ -98,7 +98,7 @@ void shTaskManager::taskExes(shHandle _handle)
 uint32_t shTaskManager::getNextPoint()
 {
   uint32_t result = UINT32_MAX;
-  for (uint16_t i = 0; i < TASKCOUNT; i++)
+  for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
     if (taskList[i].status && taskList[i].callback != NULL)
     {
@@ -148,7 +148,7 @@ void shTaskManager::setTaskState(shHandle _handle, bool _state)
 uint16_t shTaskManager::getTaskCount(bool onlyActive)
 {
   uint16_t result = 0;
-  for (uint16_t i = 0; i < TASKCOUNT; i++)
+  for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
     if (taskList[i].callback)
     {
