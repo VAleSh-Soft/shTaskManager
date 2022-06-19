@@ -1,9 +1,21 @@
 #include "shTaskManager.h"
 #include <Arduino.h>
 
-shTaskManager::shTaskManager(int16_t _taskCount)
+shTaskManager::shTaskManager(uint8_t _taskCount)
 {
-  TASKCOUNT = _taskCount;
+  init(_taskCount);
+}
+
+shTaskManager::shTaskManager() {}
+
+// shTaskManager::~shTaskManager() // если кому-то важно наличие деструктора, раскомментируйте
+// {
+//   delete[] taskList;
+// }
+
+void shTaskManager::init(uint8_t _taskCount)
+{
+  TASKCOUNT = (_taskCount) ? _taskCount : 1;
   taskList = new shTask[TASKCOUNT];
   for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
@@ -11,11 +23,6 @@ shTaskManager::shTaskManager(int16_t _taskCount)
     taskList[i].status = false;
   }
 }
-
-// shTaskManager::~shTaskManager() // если кому-то важно наличие деструктора, раскомментируйте
-// {
-//   delete[] taskList;
-// }
 
 shHandle shTaskManager::addTask(uint32_t _interval, shCallback _callback, bool isActive)
 {
