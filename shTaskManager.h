@@ -1,8 +1,10 @@
 #pragma once
 #include <Arduino.h>
 
-using shCallback = void (*)(void); // тип - указатель для Callback-функции
-using shHandle = int16_t;          // тип - идентификатор задачи
+# define UINT32_MAX __UINT32_MAX__
+
+typedef void (*shCallback)(void); // тип - указатель для Callback-функции
+typedef int16_t shHandle;         // тип - идентификатор задачи
 static const shHandle INVALID_HANDLE = -1;
 
 struct shTask // структура, описывающая задачу
@@ -92,56 +94,56 @@ public:
    */
   void stopTask(shHandle _handle);
 
- /**
-  * @brief Немедленное выполнение задачи;
-  * 
-  * @param _handle идентификатор задачи;
-  */
+  /**
+   * @brief Немедленное выполнение задачи;
+   *
+   * @param _handle идентификатор задачи;
+   */
   void taskExes(shHandle _handle);
 
   /**
    * @brief Получение времени, оставшегося до срабатывания следующей задачи;
-   * 
+   *
    * @return uint32_t, время до срабатывания следующей задачи, милисекунд;
    */
   uint32_t getNextPoint();
 
   /*
-  - _handle - 
+  - _handle -
   */
 
- /**
-  * @brief  Получение времени, оставшегося до следующего срабатывания задачи;
-  * 
-  * @param _handle идентификатор задачи;
-  * @return uint32_t, время до следующего срабатывания задачи, милисекунд;
-  */
+  /**
+   * @brief  Получение времени, оставшегося до следующего срабатывания задачи;
+   *
+   * @param _handle идентификатор задачи;
+   * @return uint32_t, время до следующего срабатывания задачи, милисекунд;
+   */
   uint32_t getNextTaskPoint(shHandle _handle);
 
- /**
-  * @brief Получение статуса задачи;
-  * 
-  * @param _handle идентификатор задачи;
-  * @return true, задача активна;
-  * @return false, задача неактивна или не существует;
-  */
+  /**
+   * @brief Получение статуса задачи;
+   *
+   * @param _handle идентификатор задачи;
+   * @return true, задача активна;
+   * @return false, задача неактивна или не существует;
+   */
   bool getTaskState(shHandle _handle);
 
- /**
-  * @brief Установка статуса задачи;
-  * 
-  * @param _handle идентификатор задачи;
-  * @param _state новый статус задачи;
-  */
+  /**
+   * @brief Установка статуса задачи;
+   *
+   * @param _handle идентификатор задачи;
+   * @param _state новый статус задачи;
+   */
   void setTaskState(shHandle _handle, bool _state);
 
   /**
-  * @brief Установка нового интервала срабатывания задачи;
-  * 
-  * @param _handle идентификатор задачи;
-  * @param _interval новое значение интервала срабатывания задачи;
-  * @param _restart перезапускать или нет задачу с новым интервалом;
-  */
+   * @brief Установка нового интервала срабатывания задачи;
+   *
+   * @param _handle идентификатор задачи;
+   * @param _interval новое значение интервала срабатывания задачи;
+   * @param _restart перезапускать или нет задачу с новым интервалом;
+   */
   void setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart = true);
 
   /**
