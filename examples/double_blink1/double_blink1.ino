@@ -1,6 +1,15 @@
+/**
+ * @file double_blink1.ino
+ * @author Vladimir Shatalov (valesh-soft@yandex.ru)
+ * @brief 
+ * @version 1.0
+ * @date 08.06.2021
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * Пример независимого мигания двух светодиодов с разным интервалом
+ */
 #include <shTaskManager.h>
-
-// Пример независимого мигания двух светодиодов с разным интервалом
 
 #define BLINK_1 5 // пин первого светодиода
 #define BLINK_2 6 // пин второго светодиода
