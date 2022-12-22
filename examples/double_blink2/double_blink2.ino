@@ -30,7 +30,7 @@ void blink1()
 {
   static byte i = 0;
   digitalWrite(BLINK_1, !digitalRead(BLINK_1));
-  if (++i > 9) 
+  if (++i >= 10) 
   { // после пяти включений и пяти выключений останавливаем задачу и запускаем вторую
     i = 0;
     tasks.stopTask(tBlink1);
@@ -42,7 +42,7 @@ void blink2()
 {
   static byte i = 0;
   digitalWrite(BLINK_2, !digitalRead(BLINK_2));
-  if (++i > 5)
+  if (++i >= 6)
   { // после трех включений и трех выключений останавливаем задачу и снова запускаем первую
     i = 0;
     tasks.stopTask(tBlink2);
