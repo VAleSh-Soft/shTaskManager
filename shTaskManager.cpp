@@ -12,6 +12,10 @@ void shTaskManager::init(uint8_t _taskCount)
 {
   TASKCOUNT = (_taskCount) ? _taskCount : 1;
   taskList = (shTask *)calloc(TASKCOUNT, sizeof(shTask));
+  if (taskList == NULL)
+  {
+    TASKCOUNT = 0;
+  }
 }
 
 shHandle shTaskManager::addTask(uint32_t _interval, shCallback _callback, bool isActive)
