@@ -27,7 +27,7 @@ public:
   /**
    * @brief Конструктор диспетчера задач;
    *
-   * @param _taskCount
+   * @param _taskCount максимальное количество задач, которое может быть добавлено в список;
    */
   shTaskManager(uint8_t _taskCount);
 
