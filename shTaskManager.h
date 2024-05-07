@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 
-#define UINT32_MAX __UINT32_MAX__
+// #define UINT32_MAX __UINT32_MAX__
 
 typedef void (*shCallback)(void); // тип - указатель для Callback-функции
 typedef int16_t shHandle;         // тип - идентификатор задачи
