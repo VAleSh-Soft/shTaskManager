@@ -1,6 +1,8 @@
 #include "shTaskManager.h"
 #include <Arduino.h>
 
+static const shHandle INVALID_HANDLE = -1;
+
 shTaskManager::shTaskManager(uint8_t _taskCount)
 {
   init(_taskCount);
@@ -18,7 +20,7 @@ void shTaskManager::init(uint8_t _taskCount)
   }
 }
 
-shHandle shTaskManager::addTask(uint32_t _interval, shCallback _callback, bool isActive)
+shHandle shTaskManager::addTask(unsigned long _interval, shCallback _callback, bool isActive)
 {
   int16_t result = INVALID_HANDLE;
   for (uint8_t i = 0; i < TASKCOUNT; i++)
@@ -48,7 +50,7 @@ void shTaskManager::tick()
 {
   for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
-    if (taskList[i].status && taskList[i].callback != NULL)
+    if (taskList[i].status && taskList[i].interval && taskList[i].callback != NULL)
     {
       if (millis() - taskList[i].timer >= taskList[i].interval)
       {
@@ -96,26 +98,26 @@ void shTaskManager::taskExes(shHandle _handle)
   }
 }
 
-uint32_t shTaskManager::getNextPoint()
+unsigned long shTaskManager::getNextPoint()
 {
-  uint32_t result = UINT32_MAX;
+  unsigned long result = UINT32_MAX;
   for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
-    if (taskList[i].status && taskList[i].callback != NULL)
+    if (taskList[i].status && taskList[i].interval && taskList[i].callback != NULL)
     {
-      uint32_t x = taskList[i].timer + taskList[i].interval - millis();
+      unsigned long x = taskList[i].timer + taskList[i].interval - millis();
       result = min(result, x);
     }
   }
   return (result);
 }
 
-uint32_t shTaskManager::getNextTaskPoint(shHandle _handle)
+unsigned long shTaskManager::getNextTaskPoint(shHandle _handle)
 {
-  uint32_t result = UINT32_MAX;
+  unsigned long result = UINT32_MAX;
   if (isValidHandle(_handle))
   {
-    if (taskList[_handle].status && taskList[_handle].callback != NULL)
+    if (taskList[_handle].status && taskList[_handle].interval && taskList[_handle].callback != NULL)
     {
       result = taskList[_handle].timer + taskList[_handle].interval - millis();
     }
@@ -128,12 +130,12 @@ bool shTaskManager::getTaskState(shHandle _handle)
   bool result = isValidHandle(_handle);
   if (result && (taskList != NULL))
   {
-    result = taskList[_handle].status && taskList[_handle].callback != NULL;
+    result = taskList[_handle].status && taskList[_handle].interval && taskList[_handle].callback != NULL;
   }
   return (result);
 }
 
-void shTaskManager::setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart)
+void shTaskManager::setTaskInterval(shHandle _handle, unsigned long _interval, bool _restart)
 {
   if (isValidHandle(_handle))
   {
@@ -158,7 +160,9 @@ uint16_t shTaskManager::getTaskCount(bool onlyActive)
   {
     if (taskList[i].callback)
     {
-      if (onlyActive && !taskList[i].status)
+      if (onlyActive && (!taskList[i].status ||
+                         !taskList[i].interval ||
+                         taskList[i].callback == NULL))
       {
         continue;
       }

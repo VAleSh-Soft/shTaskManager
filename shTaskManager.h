@@ -1,18 +1,19 @@
 #pragma once
 #include <Arduino.h>
 
-// #define UINT32_MAX __UINT32_MAX__
+#ifndef UINT32_MAX
+#define UINT32_MAX __UINT32_MAX__
+#endif
 
 typedef void (*shCallback)(void); // тип - указатель для Callback-функции
-typedef int16_t shHandle;         // тип - идентификатор задачи
-static const shHandle INVALID_HANDLE = -1;
+typedef int8_t shHandle;          // тип - идентификатор задачи
 
 struct shTask // структура, описывающая задачу
 {
-  bool status;         // статус задачи
-  uint32_t timer;      // таймер задачи
-  uint32_t interval;   // интервал срабатывания задачи
-  shCallback callback; // функция, вызываемая при срабатывании таймера задачи
+  bool status;            // статус задачи
+  unsigned long timer;    // таймер задачи
+  unsigned long interval; // интервал срабатывания задачи
+  shCallback callback;    // функция, вызываемая при срабатывании таймера задачи
 };
 
 class shTaskManager
@@ -64,7 +65,7 @@ public:
    * @param isActive активна ли задача с момента добавления или будет запущена потом;
    * @return shHandle, идентификатор задачи в списке в случае успешного добавления ее в список или -1 в случае неудачи;
    */
-  shHandle addTask(uint32_t _interval, shCallback _callback, bool isActive = true);
+  shHandle addTask(unsigned long _interval, shCallback _callback, bool isActive = true);
 
   /**
    * @brief Удаление задачи из списка;
@@ -104,9 +105,9 @@ public:
   /**
    * @brief Получение времени, оставшегося до срабатывания следующей задачи;
    *
-   * @return uint32_t, время до срабатывания следующей задачи, милисекунд;
+   * @return unsigned long, время до срабатывания следующей задачи, милисекунд;
    */
-  uint32_t getNextPoint();
+  unsigned long getNextPoint();
 
   /*
   - _handle -
@@ -116,9 +117,9 @@ public:
    * @brief  Получение времени, оставшегося до следующего срабатывания задачи;
    *
    * @param _handle идентификатор задачи;
-   * @return uint32_t, время до следующего срабатывания задачи, милисекунд;
+   * @return unsigned long, время до следующего срабатывания задачи, милисекунд;
    */
-  uint32_t getNextTaskPoint(shHandle _handle);
+  unsigned long getNextTaskPoint(shHandle _handle);
 
   /**
    * @brief Получение статуса задачи;
@@ -144,7 +145,7 @@ public:
    * @param _interval новое значение интервала срабатывания задачи;
    * @param _restart перезапускать или нет задачу с новым интервалом;
    */
-  void setTaskInterval(shHandle _handle, uint32_t _interval, bool _restart = true);
+  void setTaskInterval(shHandle _handle, unsigned long _interval, bool _restart = true);
 
   /**
    * @brief Получение количества задач в списке;
