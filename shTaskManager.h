@@ -96,14 +96,15 @@ public:
   void stopTask(shHandle _handle);
 
   /**
-   * @brief Немедленное выполнение задачи;
+   * @brief Немедленное выполнение функции, привязанной к задаче;
    *
    * @param _handle идентификатор задачи;
+   * @param _restart если true (по умолчанию), то задача начнет выполняться (или будет перезапущена, если уже была активна) с этого момента;
    */
-  void taskExes(shHandle _handle);
+  void taskExes(shHandle _handle, bool _restart = true);
 
   /**
-   * @brief Получение времени, оставшегося до срабатывания следующей задачи;
+   * @brief Получение времени в милисекундах, оставшегося до срабатывания следующей задачи;
    *
    * @return unsigned long, время до срабатывания следующей задачи, милисекунд;
    */
@@ -153,5 +154,5 @@ public:
    * @param onlyActive если true, то подсчитываются только активные задачи;
    * @return uint16_t, количество задач
    */
-  uint16_t getTaskCount(bool onlyActive = false);
+  uint16_t getTaskCount(bool _only_active = false);
 };
