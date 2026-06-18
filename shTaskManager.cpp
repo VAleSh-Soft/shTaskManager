@@ -86,13 +86,17 @@ void shTaskManager::stopTask(shHandle _handle)
   }
 }
 
-void shTaskManager::taskExes(shHandle _handle)
+void shTaskManager::taskExes(shHandle _handle, bool _restart)
 {
   if (isValidHandle(_handle))
   {
     if (taskList[_handle].callback != NULL)
     {
-      taskList[_handle].timer = millis();
+      if (_restart)
+      {
+        taskList[_handle].status = true;
+        taskList[_handle].timer = millis();
+      }
       taskList[_handle].callback();
     }
   }
@@ -153,14 +157,14 @@ void shTaskManager::setTaskState(shHandle _handle, bool _state)
   (_state) ? startTask(_handle) : stopTask(_handle);
 }
 
-uint16_t shTaskManager::getTaskCount(bool onlyActive)
+uint16_t shTaskManager::getTaskCount(bool _only_active)
 {
   uint16_t result = 0;
   for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
     if (taskList[i].callback)
     {
-      if (onlyActive && (!taskList[i].status ||
+      if (_only_active && (!taskList[i].status ||
                          !taskList[i].interval ||
                          taskList[i].callback == NULL))
       {
