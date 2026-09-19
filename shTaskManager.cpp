@@ -12,6 +12,8 @@ shTaskManager::shTaskManager() {}
 
 void shTaskManager::init(uint8_t _taskCount)
 {
+  free(taskList); // освобождаем ранее выделенную память, если init вызывается повторно
+  taskList = NULL;
   TASKCOUNT = (_taskCount) ? _taskCount : 1;
   taskList = (shTask *)calloc(TASKCOUNT, sizeof(shTask));
   if (taskList == NULL)
@@ -23,18 +25,23 @@ void shTaskManager::init(uint8_t _taskCount)
 shHandle shTaskManager::addTask(unsigned long _interval, shCallback _callback, bool isActive)
 {
   int16_t result = INVALID_HANDLE;
-  for (uint8_t i = 0; i < TASKCOUNT; i++)
+
+  if (_callback != NULL) // задача без callback не добавляется
   {
-    if (taskList[i].callback == NULL)
+    for (uint8_t i = 0; i < TASKCOUNT; i++)
     {
-      taskList[i].status = isActive;
-      taskList[i].interval = _interval;
-      taskList[i].callback = _callback;
-      taskList[i].timer = millis();
-      result = i;
-      break;
+      if (taskList[i].callback == NULL)
+      {
+        taskList[i].status = isActive;
+        taskList[i].interval = _interval;
+        taskList[i].callback = _callback;
+        taskList[i].timer = millis();
+        result = i;
+        break;
+      }
     }
   }
+  
   return (result);
 }
 
@@ -105,12 +112,13 @@ void shTaskManager::taskExes(shHandle _handle, bool _restart)
 unsigned long shTaskManager::getNextPoint()
 {
   unsigned long result = UINT32_MAX;
+  unsigned long now = millis();
+
   for (uint8_t i = 0; i < TASKCOUNT; i++)
   {
     if (taskList[i].status && taskList[i].interval && taskList[i].callback != NULL)
     {
-      unsigned long x = taskList[i].timer + taskList[i].interval - millis();
-      result = min(result, x);
+      result = min(result, _getNextTime(now, i));
     }
   }
   return (result);
@@ -119,11 +127,13 @@ unsigned long shTaskManager::getNextPoint()
 unsigned long shTaskManager::getNextTaskPoint(shHandle _handle)
 {
   unsigned long result = UINT32_MAX;
+
   if (isValidHandle(_handle))
   {
     if (taskList[_handle].status && taskList[_handle].interval && taskList[_handle].callback != NULL)
     {
-      result = taskList[_handle].timer + taskList[_handle].interval - millis();
+
+      return _getNextTime(millis(), _handle);
     }
   }
   return (result);
@@ -165,8 +175,8 @@ uint16_t shTaskManager::getTaskCount(bool _only_active)
     if (taskList[i].callback)
     {
       if (_only_active && (!taskList[i].status ||
-                         !taskList[i].interval ||
-                         taskList[i].callback == NULL))
+                           !taskList[i].interval ||
+                           taskList[i].callback == NULL))
       {
         continue;
       }
@@ -179,4 +189,12 @@ uint16_t shTaskManager::getTaskCount(bool _only_active)
 bool shTaskManager::isValidHandle(shHandle _handle)
 {
   return (_handle > INVALID_HANDLE && _handle < TASKCOUNT);
+}
+
+unsigned long shTaskManager::_getNextTime(unsigned long _now, shHandle _handle)
+{
+  unsigned long deadline = taskList[_handle].timer + taskList[_handle].interval;
+  // если время срабатывания уже наступило - возвращаем 0, чтобы не получить
+  // переполнение беззнакового типа при вычитании
+  return ((_now >= deadline) ? 0 : (deadline - _now));
 }

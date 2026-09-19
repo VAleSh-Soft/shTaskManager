@@ -25,7 +25,9 @@ setTaskInterval	KEYWORD2
 setTaskState	KEYWORD2
 getTaskState	KEYWORD2
 getNextPoint	KEYWORD2
+getNextTaskPoint	KEYWORD2
 getTaskCount	KEYWORD2
+init	KEYWORD2
 tick	KEYWORD2
 
 #######################################

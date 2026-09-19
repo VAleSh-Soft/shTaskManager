@@ -24,6 +24,8 @@ private:
 
   bool isValidHandle(shHandle _handle); // проверка корректности идентификатора задачи
 
+  unsigned long _getNextTime(unsigned long _now, shHandle _handle); // вычисление времени между текущим временем и временем срабатывания задачи
+
 public:
   /**
    * @brief Конструктор диспетчера задач;
