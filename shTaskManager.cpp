@@ -1,8 +1,6 @@
 #include "shTaskManager.h"
 #include <Arduino.h>
 
-static const shHandle INVALID_HANDLE = -1;
-
 shTaskManager::shTaskManager(uint8_t _taskCount)
 {
   init(_taskCount);
@@ -14,21 +12,25 @@ void shTaskManager::init(uint8_t _taskCount)
 {
   free(taskList); // освобождаем ранее выделенную память, если init вызывается повторно
   taskList = NULL;
-  TASKCOUNT = (_taskCount) ? _taskCount : 1;
-  taskList = (shTask *)calloc(TASKCOUNT, sizeof(shTask));
+  taskCount = (_taskCount) ? _taskCount : 1;
+
+  if (taskCount > MAX_TASK_COUNT)
+  {
+    taskCount = MAX_TASK_COUNT;
+  }
+
+  taskList = (shTask *)calloc(taskCount, sizeof(shTask));
   if (taskList == NULL)
   {
-    TASKCOUNT = 0;
+    taskCount = 0;
   }
 }
 
 shHandle shTaskManager::addTask(unsigned long _interval, shCallback _callback, bool isActive)
 {
-  int16_t result = INVALID_HANDLE;
-
-  if (_callback != NULL) // задача без callback не добавляется
+  if (_callback != NULL && taskList != NULL) // задача без callback не добавляется
   {
-    for (uint8_t i = 0; i < TASKCOUNT; i++)
+    for (uint8_t i = 0; i < taskCount; i++)
     {
       if (taskList[i].callback == NULL)
       {
@@ -36,13 +38,12 @@ shHandle shTaskManager::addTask(unsigned long _interval, shCallback _callback, b
         taskList[i].interval = _interval;
         taskList[i].callback = _callback;
         taskList[i].timer = millis();
-        result = i;
-        break;
+        return (i);
       }
     }
   }
-  
-  return (result);
+
+  return (INVALID_HANDLE);
 }
 
 void shTaskManager::delTask(shHandle _handle)
@@ -55,7 +56,7 @@ void shTaskManager::delTask(shHandle _handle)
 
 void shTaskManager::tick()
 {
-  for (uint8_t i = 0; i < TASKCOUNT; i++)
+  for (uint8_t i = 0; i < taskCount; i++)
   {
     if (taskList[i].status && taskList[i].interval && taskList[i].callback != NULL)
     {
@@ -114,7 +115,7 @@ unsigned long shTaskManager::getNextPoint()
   unsigned long result = UINT32_MAX;
   unsigned long now = millis();
 
-  for (uint8_t i = 0; i < TASKCOUNT; i++)
+  for (uint8_t i = 0; i < taskCount; i++)
   {
     if (taskList[i].status && taskList[i].interval && taskList[i].callback != NULL)
     {
@@ -126,8 +127,6 @@ unsigned long shTaskManager::getNextPoint()
 
 unsigned long shTaskManager::getNextTaskPoint(shHandle _handle)
 {
-  unsigned long result = UINT32_MAX;
-
   if (isValidHandle(_handle))
   {
     if (taskList[_handle].status && taskList[_handle].interval && taskList[_handle].callback != NULL)
@@ -136,13 +135,14 @@ unsigned long shTaskManager::getNextTaskPoint(shHandle _handle)
       return _getNextTime(millis(), _handle);
     }
   }
-  return (result);
+
+  return (UINT32_MAX);
 }
 
 bool shTaskManager::getTaskState(shHandle _handle)
 {
   bool result = isValidHandle(_handle);
-  if (result && (taskList != NULL))
+  if (result)
   {
     result = taskList[_handle].status && taskList[_handle].interval && taskList[_handle].callback != NULL;
   }
@@ -151,10 +151,10 @@ bool shTaskManager::getTaskState(shHandle _handle)
 
 void shTaskManager::setTaskInterval(shHandle _handle, unsigned long _interval, bool _restart)
 {
-  if (isValidHandle(_handle))
+  if (isValidHandle(_handle) && (taskList[_handle].callback != NULL))
   {
     taskList[_handle].interval = _interval;
-    if (_restart && (taskList[_handle].callback != NULL))
+    if (_restart)
     {
       taskList[_handle].status = true;
       taskList[_handle].timer = millis();
@@ -170,7 +170,7 @@ void shTaskManager::setTaskState(shHandle _handle, bool _state)
 uint16_t shTaskManager::getTaskCount(bool _only_active)
 {
   uint16_t result = 0;
-  for (uint8_t i = 0; i < TASKCOUNT; i++)
+  for (uint8_t i = 0; i < taskCount; i++)
   {
     if (taskList[i].callback)
     {
@@ -188,7 +188,7 @@ uint16_t shTaskManager::getTaskCount(bool _only_active)
 
 bool shTaskManager::isValidHandle(shHandle _handle)
 {
-  return (_handle > INVALID_HANDLE && _handle < TASKCOUNT);
+  return (taskList != NULL && _handle > INVALID_HANDLE && _handle < taskCount);
 }
 
 unsigned long shTaskManager::_getNextTime(unsigned long _now, shHandle _handle)
